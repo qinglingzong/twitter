@@ -40,7 +40,7 @@
           下载地址: <%= link_to video, video %>
           </div>
           <div>
-          <button class="btn btn-primary">转发</button>
+            <%= link_to "转发", "/retweet?video_url=#{URI.encode_www_form_component(video)}", method: :post, class: 'btn btn-primary',target: "_blank" %>
           </div>
         </div>
       <% end %>

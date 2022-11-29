@@ -34,6 +34,25 @@ class IndexController < ApplicationController
   end
 
   def retweet
+    video_url = params[:video_url]
+    # 下载视频
+    temp_file = "#{Rails.root.join('tmp', Time.now.to_f.to_s)}.mp4"
+    begin
+      # 为了安全起见，检查video_url格式是否正确
+      if video_url =~ /^https?:\/\//
+        twitter_client = TwitterClient
+        `wget #{video_url} -O #{temp_file}`
+        tweet = twitter_client.update_with_media("I'm tweeting with @gem!", File.new(temp_file))
+        # tweet = twitter_client.update("I'm tweeting with @gem!")
+        # 重定向到新发布的推
+        redirect_to tweet.url.to_s, allow_other_host: true
+      else
+        raise 'invalid video url'
+      end
+    rescue Exception => e
+      flash[:notice] = e.message
+      redirect_to '/'
+    end
   end
 
 
@@ -42,8 +61,8 @@ class IndexController < ApplicationController
     @client ||= Twitter::REST::Client.new do |config|
       twitter_config = Rails.application.credentials.config
       # 如果没有提供，则使用系统设置的
-      config.consumer_key        = cookies[:twitter_consumer_key] || twitter_config[:twitter_consumer_key]
-      config.consumer_secret     = cookies[:twitter_consumer_secret] || twitter_config[:twittet_consumer_secret]
+      config.consumer_key        = cookies[:twitter_consumer_key].presence || twitter_config[:twitter_consumer_key]
+      config.consumer_secret     = cookies[:twitter_consumer_secret].presence || twitter_config[:twittet_consumer_secret]
       config.access_token        = cookies[:twitter_access_token]
       config.access_token_secret = cookies[:twitter_access_token_secret]
     end

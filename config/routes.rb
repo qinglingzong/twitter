@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   # root "articles#index"
   root "index#index"
   post "/save", to: "index#save"
+  get  "/retweet", to: "index#retweet"
 end
