@@ -6,4 +6,7 @@ Rails.application.routes.draw do
   root "index#index"
   post "/save", to: "index#save"
   get  "/retweet", to: "index#retweet"
+  get  "/authenticate", to: "index#authenticate"
+  get  "/auth/twitter", to: "index#do_authenticate"
+  get '/logout', to: 'index#logout'
 end

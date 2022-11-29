@@ -9,6 +9,7 @@ class IndexController < ApplicationController
     @videos = []
     begin
       events = twitter_client.direct_messages_events
+      @user  = twitter_client.user
       @videos = DirectMessageParser.new(events).video_urls
     rescue Exception => e
       flash.now[:notice] = "获取视频失败: #{e.message}"
@@ -64,6 +65,34 @@ class IndexController < ApplicationController
   end
 
 
+  def authenticate
+    @consumer = oauth_consumer
+    @request_token = @consumer.get_request_token(
+      :oauth_callback => Rails.env.production? ? "https://yoo.im/auth/twitter" : "http://localhost:3000/auth/twitter"
+    )
+    session[:token] = @request_token.token
+    session[:token_secret] = @request_token.secret
+    url = @request_token.authenticate_url
+    redirect_to url, allow_other_host: true
+  end
+
+  def do_authenticate
+    hash = { oauth_token: session[:token], oauth_token_secret: session[:token_secret] }
+    request_token = OAuth::RequestToken.from_hash(oauth_consumer, hash)
+    access_token = request_token.get_access_token(oauth_verifier: params[:oauth_verifier])
+    cookies[:twitter_access_token] = access_token.token
+    cookies[:twitter_access_token_secret] = access_token.secret
+    # render inline: access_token.inspect
+    redirect_to '/'
+  end
+
+  def logout
+    cookies[:twitter_access_token] = nil
+    cookies[:twitter_access_token_secret] = nil
+    flash[:notice] = '登出成功'
+    redirect_to '/'
+  end
+
   private
   def twitter_client
     @client ||= Twitter::REST::Client.new do |config|
@@ -75,4 +104,13 @@ class IndexController < ApplicationController
       config.access_token_secret = cookies[:twitter_access_token_secret]
     end
   end
+
+  def oauth_consumer
+    @consumer ||= OAuth::Consumer.new(
+      Rails.application.credentials.config[:twitter_consumer_key],
+      Rails.application.credentials.config[:twitter_consumer_secret],
+      :site => "https://api.twitter.com"
+    )
+  end
+
 end

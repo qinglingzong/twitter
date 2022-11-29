@@ -1,4 +1,16 @@
 <div class="container">
+  <% if @user %>
+  <p>
+  <%= image_tag @user.profile_image_url_https.to_s %>
+  </p>
+  <p>
+  <%= @user.screen_name %>, <%= link_to '登出', '/logout' %>
+  </p>
+  <% else %>
+  <%= link_to "使用twitter登录", "/authenticate", class: "btn btn-primary" %>
+  <% end %>
+
+  <!--
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">输入配置信息</h5>
@@ -36,13 +48,14 @@
       </p>
     </div>
   </div>
+  -->
 
   <div class="mb-4"></div>
 
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">获取的视频</h5>
-      <% @videos.each do |video| %>
+      <% @videos.each_with_index do |video, index| %>
         <div class="p-4 mb-4">
           <video controls>
             <source src="<%= video %>" />
@@ -51,10 +64,23 @@
           下载地址: <%= link_to video, video %>
           </div>
           <div>
-            <%= link_to "转发", "/retweet?video_url=#{URI.encode_www_form_component(video)}", method: :post, class: 'btn btn-primary',target: "_blank" %>
+            内容: <%= text_field_tag "text-#{index}", "", style: "width:400px" %>
+            <button
+              onclick="onretweet('/retweet?video_url=<%= URI.encode_www_form_component(video) %>', <%= index %>)"
+              class="btn btn-primary">
+              转发
+            </button>
           </div>
         </div>
       <% end %>
     </div>
   </div>
 </div>
+
+<script language="javascript">
+function onretweet(url, index) {
+  const text = document.querySelector(`#text-${index}`).value;
+  url = url + `&text=${text}`
+  location.href = url;
+}
+</script>
