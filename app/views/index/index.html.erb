@@ -26,6 +26,14 @@
     </div>
   </div>
 
-  <div>
+  <div class="mb-4"></div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">获取的视频</h5>
+      <% @videos.each do |video| %>
+        <%= debug video %>
+      <% end %>
+    </div>
   </div>
 </div>

@@ -6,6 +6,8 @@ class IndexController < ApplicationController
       twitter_access_token: cookies[:twitter_access_token],
       twitter_access_token_secret: cookies[:twitter_access_token_secret]
     }
+    @videos = []
+    @videos = ['a', 'b']
   end
 
   def save
@@ -19,13 +21,6 @@ class IndexController < ApplicationController
     cookies[:twitter_access_token] = access_token
     cookies[:twitter_access_token_secret] = access_token_secret
 
-    client = Twitter::REST::Client.new do |config|
-      config.consumer_key        = consumer_key
-      config.consumer_secret     = consumer_secret
-      config.access_token        = access_token
-      config.access_token_secret = access_token_secret
-    end
-
     index
     flash[:notice] = 'successfully saved.'
     # render 'index'
@@ -34,5 +29,16 @@ class IndexController < ApplicationController
   end
 
   def retweet
+  end
+
+
+  private
+  def twitter_client
+    @client ||= Twitter::REST::Client.new do |config|
+      config.consumer_key        = cookies[:twitter_consumer_key]
+      config.consumer_secret     = cookies[:twitter_consumer_secret]
+      config.access_token        = cookies[:twitter_access_token]
+      config.access_token_secret = cookies[:twitter_access_token_secret]
+    end
   end
 end
