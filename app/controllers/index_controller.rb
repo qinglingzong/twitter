@@ -8,10 +8,10 @@ class IndexController < ApplicationController
     }
     @videos = []
     begin
-      events = TwitterClient.direct_messages_events
+      events = twitter_client.direct_messages_events
       @videos = DirectMessageParser.new(events).video_urls
     rescue Exception => e
-      flash.now[:notice] = e.message
+      flash.now[:notice] = "获取视频失败: #{e.message}"
     end
   end
 
@@ -26,8 +26,15 @@ class IndexController < ApplicationController
     cookies[:twitter_access_token] = access_token
     cookies[:twitter_access_token_secret] = access_token_secret
 
+    begin
+      user = twitter_client.user('aotianlong')
+      flash[:notice] = 'successfully saved.'
+      cookies[:valid_settings] = true
+    rescue Exception => e
+      cookies[:valid_settings] = false
+      flash[:error] = e.message
+    end
     index
-    flash[:notice] = 'successfully saved.'
     # render 'index'
     redirect_to '/'
 
@@ -50,7 +57,7 @@ class IndexController < ApplicationController
         raise 'invalid video url'
       end
     rescue Exception => e
-      flash[:notice] = e.message
+      flash[:error] = e.message
       redirect_to '/'
     end
   end

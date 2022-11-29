@@ -4,6 +4,7 @@
       <h5 class="card-title">输入配置信息</h5>
       <p class="card-text">
         <%= form_tag '/save' do %>
+          <div class="alert alert-warning">设置信息保存在浏览器cookie中，并不存在于服务器</div>
           <div class="mb-3">
             <label class="form-label">Consumer Key</label>
             <%= text_field_tag 'twitter_consumer_key', @config[:twitter_consumer_key], class: 'form-control' %>
@@ -20,6 +21,16 @@
             <label class="form-label">Access Token Secret</label>
             <%= text_field_tag 'twitter_access_token_secret', @config[:twitter_access_token_secret], class: 'form-control' %>
           </div>
+          <% if cookies[:valid_settings] %>
+            <div class="mb-2">
+            <% if cookies[:valid_settings] === 'false' %>
+            <span class="badge text-bg-danger">无效设置</span>
+            <% end %>
+            <% if cookies[:valid_settings] === 'true' %>
+            <span class="badge text-bg-success">设置成功</span>
+            <% end %>
+            </div>
+          <% end %>
           <button type="submit" class="btn btn-primary">保存配置</button>
         <% end %>
       </p>
