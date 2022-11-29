@@ -42,6 +42,7 @@ class IndexController < ApplicationController
 
   def retweet
     video_url = params[:video_url]
+    text = params[:text] || '转发'
     # 下载视频
     temp_file = "#{Rails.root.join('tmp', Time.now.to_f.to_s)}.mp4"
     begin
@@ -49,7 +50,7 @@ class IndexController < ApplicationController
       if video_url =~ /^https?:\/\//
         twitter_client = TwitterClient
         `wget #{video_url} -O #{temp_file}`
-        tweet = twitter_client.update_with_media("I'm tweeting with @gem!", File.new(temp_file))
+        tweet = twitter_client.update_with_media(text, File.new(temp_file))
         # tweet = twitter_client.update("I'm tweeting with @gem!")
         # 重定向到新发布的推
         redirect_to tweet.url.to_s, allow_other_host: true
