@@ -7,7 +7,12 @@ class IndexController < ApplicationController
       twitter_access_token_secret: cookies[:twitter_access_token_secret]
     }
     @videos = []
-    @videos = ['a', 'b']
+    begin
+      events = TwitterClient.direct_messages_events
+      @videos = DirectMessageParser.new(events).video_urls
+    rescue Exception => e
+      flash.now[:notice] = e.message
+    end
   end
 
   def save

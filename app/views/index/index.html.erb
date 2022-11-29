@@ -32,7 +32,17 @@
     <div class="card-body">
       <h5 class="card-title">获取的视频</h5>
       <% @videos.each do |video| %>
-        <%= debug video %>
+        <div class="p-4 mb-4">
+          <video controls>
+            <source src="<%= video %>" />
+          </video>
+          <div>
+          下载地址: <%= link_to video, video %>
+          </div>
+          <div>
+          <button class="btn btn-primary">转发</button>
+          </div>
+        </div>
       <% end %>
     </div>
   </div>
