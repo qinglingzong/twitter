@@ -6,8 +6,17 @@
 
 ## 安装
 
+如果是windows系统，请使用wsl。
+然后安装ruby
+
 ```bash
-git clone git@github.com:qinglingzong/twitter.git
+apt install ruby
+```
+
+安装完成之后, 从源代码安装此程序
+
+```bash
+git clone https://github.com/qinglingzong/twitter.git
 cd twitter
 bundle
 rails s
