@@ -1,24 +1,5 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+从Twitter私信里下载影片再分享。
+使用场景：收到爆料后验证再转发。
+大概思路，Oauth登陆授权，解析私信Json，找出影片最清晰地址，保存。
