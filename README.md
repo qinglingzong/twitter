@@ -14,3 +14,8 @@ rails s
 ```
 
 打开浏览器 <http://localhost:3000(http://localhost:3000)>
+
+## todo
+
+初期实现一个简单版本,利用rails自带的mvc的方式开发。
+如果有更多需求，则转向 api + 前端的形式来开发， 可以开发复杂的应用。
