@@ -35,8 +35,10 @@ class IndexController < ApplicationController
   private
   def twitter_client
     @client ||= Twitter::REST::Client.new do |config|
-      config.consumer_key        = cookies[:twitter_consumer_key]
-      config.consumer_secret     = cookies[:twitter_consumer_secret]
+      twitter_config = Rails.application.credentials.config
+      # 如果没有提供，则使用系统设置的
+      config.consumer_key        = cookies[:twitter_consumer_key] || twitter_config[:twitter_consumer_key]
+      config.consumer_secret     = cookies[:twitter_consumer_secret] || twitter_config[:twittet_consumer_secret]
       config.access_token        = cookies[:twitter_access_token]
       config.access_token_secret = cookies[:twitter_access_token_secret]
     end
