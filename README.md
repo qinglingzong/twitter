@@ -19,6 +19,25 @@ apt install ruby
 git clone https://github.com/qinglingzong/twitter.git
 cd twitter
 bundle
+```
+
+
+配置:
+```bash
+rm config/credentials.yml.enc
+rails credentials:edit
+```
+
+添加以下配置:
+
+twitter_consumer_key: fvCpDsAQmKDNlhSUBavGQ
+twitter_consumer_secret: vS3HsduBAzEdVrsc8UDS7GLwCkwIqhKZ2pZLaFWVEcQ
+twitter_access_token:
+twitter_access_token_secret:
+
+consumer_key, consumer_secret 可以用自己的，也可以用上面的, 下面两个可以不填写，是我之前没有用oauth的时候测试用的
+
+```bash
 rails s
 ```
 
