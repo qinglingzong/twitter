@@ -99,9 +99,10 @@ class IndexController < ApplicationController
       twitter_config = Rails.application.credentials.config
       # 如果没有提供，则使用系统设置的
       config.consumer_key        = cookies[:twitter_consumer_key].presence || twitter_config[:twitter_consumer_key]
-      config.consumer_secret     = cookies[:twitter_consumer_secret].presence || twitter_config[:twittet_consumer_secret]
+      config.consumer_secret     = cookies[:twitter_consumer_secret].presence || twitter_config[:twitter_consumer_secret]
       config.access_token        = cookies[:twitter_access_token]
       config.access_token_secret = cookies[:twitter_access_token_secret]
+      # logger.info "config: #{config.inspect}"
     end
   end
 
